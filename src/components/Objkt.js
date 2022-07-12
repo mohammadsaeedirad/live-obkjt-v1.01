@@ -1,44 +1,85 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import '../styles/Objkt.css'
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
-const Objkt = (props) => {
+const Objkt = ({data}) => {
 
-    const ipfs = props.data.metadata.displayUri;
-    const imageUri = ipfs.replace("ipfs://", "https://ipfs.io/ipfs/")
+    // async function royalty(dataID) {
+    //     await async function getRoyalty(id) {
+    //         let results = await fetch('https://data.objkt.com/v2/graphql', {
+    //             method: 'POST',
+    //             body: JSON.stringify({
+    //                 query: `query MyQuery {
+    //                   royalties_by_pk(id: "${dataID}") {
+    //                     amount
+    //                     decimals
+    //                   }
+    //                 }
+    //                 `
+    //             })
+    //         })
+    //         let royalty = await results.json();
+    //         return royalty.data.royalties_by_pk
+    //     }
+    //
+    //     let amount = await getRoyalty()
+    //     return amount
+    // }
 
-    let marketplace = ''
-    switch (props.data.contract.alias) {
-        case 'hic et nunc NFTs':
-            marketplace = "hic et nunc";
-            break;
-        case undefined:
-            marketplace = "OBJKT.com";
-            break;
-        case 'akaSwap NFTs':
-            marketplace = "akaSwap";
-            break;
-        case 'FXHASH GENTK v2':
-            marketplace = "fxhash";
-            break;
-        case 'Versum Items':
-            marketplace = "Versum";
-            break;
-        case 'KALAM':
-            marketplace = "kalamint";
-            break;
-        default:
-            marketplace = props.data.contract.alias;
+    function image() {
+        let ipfs = '';
+        if (data.metadata) {
+            if (data.metadata.artifactUri) {
+                ipfs = data.metadata.artifactUri;
+            }
+            ipfs = data.metadata.displayUri;
+
+            if (data.contract.address !== 'KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton' &&
+                data.metadata.name !== '[WAITING TO BE SIGNED]' &&
+                data.metadata.thumbnailUri) {
+                ipfs = data.metadata.thumbnailUri;
+            }
+        }
+
+        let imageUri = ipfs.replace("ipfs://", "https://ipfs.io/ipfs/")
+        return imageUri;
     }
 
-    if (marketplace.length > 20) {
-        marketplace = marketplace.substr(0, 4) + '...' + marketplace.substr(-3, 4);
+    function marketplaceName() {
+        let marketplace = ''
+        switch (data.contract.alias) {
+            case 'hic et nunc NFTs':
+                marketplace = "hic et nunc";
+                break;
+            case undefined:
+                marketplace = "OBJKT.com";
+                break;
+            case 'akaSwap NFTs':
+                marketplace = "akaSwap";
+                break;
+            case 'FXHASH GENTK v2':
+                marketplace = "fxhash";
+                break;
+            case 'Versum Items':
+                marketplace = "Versum";
+                break;
+            case 'KALAM':
+                marketplace = "kalamint";
+                break;
+            default:
+                marketplace = data.contract.alias;
+        }
+
+
+        if (marketplace.length > 20) {
+            marketplace = marketplace.substr(0, 4) + '...' + marketplace.substr(-3, 4);
+        }
+        return marketplace;
     }
 
     let creatorText = ''
-    if (props.data.metadata.creators) {
-        creatorText = props.data.metadata.creators[0]
+    if (data.metadata.creators) {
+        creatorText = data.metadata.creators[0]
     } else {
         creatorText = 'undefined'
     }
@@ -49,55 +90,38 @@ const Objkt = (props) => {
         creatorText = 'generative'
     }
 
-    const marketUrl = "https://objkt.com/asset/" + props.data.contract.address + "/" + props.data.tokenId;
+    const marketUrl = "https://objkt.com/asset/" + data.contract.address + "/" + data.tokenId;
 
-    function royality(){
-        let royality = 0;
-        const fetchData = async () => {
-            const response = await fetch(marketUrl)
-            const data = await response.json()
-
-        }
-
-        return royality;
-    }
-
-    const marketArtistUrl = "https://nftbiker.xyz/artist?wallet=" + props.data.metadata.creators;
-
-    let royalityShares = 0
-    if (props.data.metadata.royalties) {
-        const royality = props.data.metadata.royalties.shares;
-        for (let i in royality) {
-            royalityShares += royality[i]
-        }
-    }
+    const marketArtistUrl = "https://nftbiker.xyz/artist?wallet=" + data.metadata.creators;
 
     let price = 0;
-    if (props.data.balancesCount) {
-        price = props.data.balancesCount;
+    if (data.balancesCount) {
+        price = data.balancesCount;
     }
 
-    const edition = props.data.totalMinted
-    if (marketplace.length > 9999) {
-        marketplace = '+9999'
-    }
+    // const edition = props.data.totalMinted
+    // if (marketplace.length > 9999) {
+    //     marketplace = '+9999'
+    // }
 
     return (
         <div className='objkt'>
             <a href={marketUrl} target="_blank" rel="noopener noreferrer">
-                <img className="image" src={imageUri}/>
+                <img className="image" src={image()}/>
             </a>
             <div className='creator_and_edition'>
                 <a className='creator' href={marketArtistUrl} target="_blank" rel="noopener noreferrer">
                     <AccountBoxIcon fontSize={"small"}/>
                     <p>{creatorText}</p>
                 </a>
-                <p>{edition} ed.</p>
+                <p>ed.</p>
             </div>
             <div className='marketplace_and_royality'>
-                <p>{marketplace}</p>
-                <p>Royality: {royality()}%</p>
+                <p>{marketplaceName()}</p>
+                {/*<p>Royalty: {royalty(data.id)}</p>*/}
             </div>
+
+
             {/*<span className='separate_line'></span>*/}
             {/*<div className='collectors'>*/}
             {/*    <p>Collectors</p>*/}

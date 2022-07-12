@@ -4,28 +4,21 @@ import {useEffect, useState} from "react";
 import Navbar from "./components/Navbar";
 import Live from "./pages/Live"
 import Objkt from "./components/Objkt";
+import {contractAddresses} from './components/contractAddresses'
+import {moreData} from "./components/moreData";
 
 let available = false
 
 function App() {
-
     const [content, setContent] = useState([])
+    const newContent = content.filter(x => x.metadata.name !== '[WAITING TO BE SIGNED]') || []
 
-    const versum = 'KT1LjmAdYQCLBjwv4S2oFkEzyHVkomAf5MrW'
-    const tezotopia = 'KT1ViVwoVfGSCsDaxjwoovejm1aYSGz7s2TZ'
-    const blindgallery = 'KT1D8Q4HEMzoiBaGSVDdTTYMq9phz98WizVQ'
-    const fxhash = 'KT1U6EHmNxJTkvaWJ4ThczG4FSDaHC21ssvi'
-    const dogami = 'KT1NVvPsNDChrLRH5K2cy6Sc9r1uuUwdiZQd'
-    const materia = 'KT1KRvNVubq64ttPbQarxec5XdS6ZQU4DVD2'
-    const moonCakes = 'KT1CzVSa18hndYupV9NcXy3Qj7p8YFDZKVQv'
-    const stayWarm = 'KT1GvccrburpbWwiLdBWZXvMt9oZUiTdYSY8'
-    const gap = 'KT1GA6KaLWpURnjvmnxB4wToErzM2EXHqrMo'
-    const mcLaren = 'KT1PEGqt5rMmHpyaMXc8RFTFkkAUDrzSFRWk'
-    const kalamint = 'KT1A5P4ejnLix13jtadsfV9GCnXLMNnab8UT'
+    console.log(moreData(newContent))
+
 
     const fetchData = async () => {
         available = false
-        const response = await fetch(`https://staging.api.tzkt.io/v1/tokens?sort.desc=lastLevel&contract.ni=${tezotopia},${blindgallery},${fxhash},${dogami},${materia},${moonCakes},${gap},${stayWarm},${mcLaren}&transfersCount.gt=2&metadata.displayUri.ne=true&limit=24`)
+        const response = await fetch(`https://staging.api.tzkt.io/v1/tokens?sort.desc=lastLevel&contract.ni=${contractAddresses.tezotopia},${contractAddresses.blindgallery},${contractAddresses.dogami},${contractAddresses.materia},${contractAddresses.moonCakes},${contractAddresses.gap},${contractAddresses.stayWarm},${contractAddresses.mcLaren}&transfersCount.gt=2&metadata.displayUri.ne=true&limit=3    `)
         const data = await response.json()
         setContent(data)
         available = true
@@ -40,6 +33,12 @@ function App() {
     useEffect(() => {
         fetchData()
     }, [])
+
+        // function purification(content){
+        //     if (content.data.metadata.name !== '[WAITING TO BE SIGNED]'){
+        //         return content;
+        //     }
+        // }
 
     return (
         <div className="App">
@@ -56,7 +55,7 @@ function App() {
             </Router>
 
             <div className='layout'>
-                {content.map(x => <Objkt data={x} key={x.id}/>)}
+                {newContent.map(x => <Objkt data={x} key={x.id}/>)}
             </div>
 
         </div>
