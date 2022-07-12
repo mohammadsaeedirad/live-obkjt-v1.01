@@ -1,0 +1,118 @@
+.objkt{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    margin-bottom: 20px;
+
+    position: relative;
+    width: 198px;
+    height: min-content;
+
+    background: #464646;
+    border-radius: 10px;
+
+}
+
+.image{
+    width: 100%;
+    height: 198px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+p{
+    margin: 0;
+    font-family: Arial;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 150%;
+}
+
+.creator_and_edition{
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    justify-content: space-between;
+    color: #F7F7F7;
+    padding: 5px 5px;
+}
+
+.creator{
+    display: flex;
+    flex-direction: row;
+}
+
+.creator p{
+    padding-left: 5px;
+}
+
+.marketplace_and_royality{
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    justify-content: space-between;
+    color: #F7F7F7;
+    padding: 5px 5px;
+}
+
+.separate_line{
+    border-top: 1px solid #F7F7F7;
+    margin: 5px 0;
+    width: 100%;
+}
+
+.collectors{
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    justify-content: space-between;
+    color: #F7F7F7;
+    padding: 5px 5px;
+}
+.percentage{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100px;
+}
+.percentage_container{
+    border-radius: 3px;
+    background-color: #F7F7F7;
+    width: 70px;
+    height: 3px;
+}
+.percentage_bar{
+    height: 3px;
+    background-color: #528DFF;
+    width: 34%;
+}
+
+.sale_chance{
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    justify-content: space-between;
+    color: #F7F7F7;
+    padding: 5px 5px;
+}
+
+.buy_button{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0;
+
+    width: 198px;
+    height: 28px;
+
+    border: none;
+    background: #528DFF;
+    color: #F7F7F7;
+
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
