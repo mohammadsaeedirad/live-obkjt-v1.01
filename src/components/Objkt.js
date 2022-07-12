@@ -1,14 +1,18 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import '../styles/Objkt.css'
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 const Objkt = ({data}) => {
+    const [tid,setTid]=useState()
+    useEffect(() => {
+        setTid(data.id)
+    }, [data])
+    
 
-    // async function royalty() {
-    //     let amount = await getRoyalty(data.id)
-    //     console.log(amount)
-    //     return amount
-    // }
+    async function royalty() {
+        let amount = await getRoyalty(data.id)
+        return amount
+    }
 
     async function getRoyalty(id) {
         let results = await fetch('https://data.objkt.com/v2/graphql', {
@@ -122,7 +126,7 @@ const Objkt = ({data}) => {
         </div>
         <div className='marketplace_and_royality'>
             <p>{marketplaceName()}</p>
-            <p>Royalty: {getRoyalty(data.id)}</p>
+            <p>Royalty: {tid}</p>
         </div>
 
 
