@@ -4,27 +4,34 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 const Objkt = ({data}) => {
 
-    // async function royalty(dataID) {
-    //     await async function getRoyalty(id) {
-    //         let results = await fetch('https://data.objkt.com/v2/graphql', {
-    //             method: 'POST',
-    //             body: JSON.stringify({
-    //                 query: `query MyQuery {
-    //                   royalties_by_pk(id: "${dataID}") {
-    //                     amount
-    //                     decimals
-    //                   }
-    //                 }
-    //                 `
-    //             })
-    //         })
-    //         let royalty = await results.json();
-    //         return royalty.data.royalties_by_pk
-    //     }
-    //
-    //     let amount = await getRoyalty()
+    // async function royalty() {
+    //     let amount = await getRoyalty(data.id)
+    //     console.log(amount)
     //     return amount
     // }
+
+    async function getRoyalty(id) {
+        let results = await fetch('https://data.objkt.com/v2/graphql', {
+            method: 'POST', body: JSON.stringify({
+                query: `query MyQuery {
+                  event_by_pk(id: "${id}") {
+                    id
+                    price
+                    token_pk
+                    token {
+                      royalties {
+                        amount
+                        decimals
+                      }
+                    }
+                  }
+                }`
+            })
+        })
+        let royalty = await results.json();
+        console.log(royalty.data.event_by_pk.id)
+        return royalty.data.event_by_pk.id
+    }
 
     function image() {
         let ipfs = '';
@@ -34,9 +41,7 @@ const Objkt = ({data}) => {
             }
             ipfs = data.metadata.displayUri;
 
-            if (data.contract.address !== 'KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton' &&
-                data.metadata.name !== '[WAITING TO BE SIGNED]' &&
-                data.metadata.thumbnailUri) {
+            if (data.contract.address !== 'KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton' && data.metadata.name !== '[WAITING TO BE SIGNED]' && data.metadata.thumbnailUri) {
                 ipfs = data.metadata.thumbnailUri;
             }
         }
@@ -104,47 +109,45 @@ const Objkt = ({data}) => {
     //     marketplace = '+9999'
     // }
 
-    return (
-        <div className='objkt'>
-            <a href={marketUrl} target="_blank" rel="noopener noreferrer">
-                <img className="image" src={image()}/>
+    return (<div className='objkt'>
+        <a href={marketUrl} target="_blank" rel="noopener noreferrer">
+            <img className="image" src={image()}/>
+        </a>
+        <div className='creator_and_edition'>
+            <a className='creator' href={marketArtistUrl} target="_blank" rel="noopener noreferrer">
+                <AccountBoxIcon fontSize={"small"}/>
+                <p>{creatorText}</p>
             </a>
-            <div className='creator_and_edition'>
-                <a className='creator' href={marketArtistUrl} target="_blank" rel="noopener noreferrer">
-                    <AccountBoxIcon fontSize={"small"}/>
-                    <p>{creatorText}</p>
-                </a>
-                <p>ed.</p>
-            </div>
-            <div className='marketplace_and_royality'>
-                <p>{marketplaceName()}</p>
-                {/*<p>Royalty: {royalty(data.id)}</p>*/}
-            </div>
-
-
-            {/*<span className='separate_line'></span>*/}
-            {/*<div className='collectors'>*/}
-            {/*    <p>Collectors</p>*/}
-            {/*    <div className='percentage'>*/}
-            {/*        <div className='percentage_container'>*/}
-            {/*            <div className='percentage_bar'></div>*/}
-            {/*        </div>*/}
-            {/*        <p>34%</p>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
-            {/*<div className='sale_chance'>*/}
-            {/*    <p>Sale Chance</p>*/}
-            {/*    <div className='percentage'>*/}
-            {/*        <div className='percentage_container'>*/}
-            {/*            <div className='percentage_bar'></div>*/}
-            {/*        </div>*/}
-            {/*        <p>34%</p>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
-            {/*<button className='buy_button'><ShoppingBagIcon fontSize={"small"}/>{price}tz</button>*/}
-
+            <p>ed.</p>
         </div>
-    );
+        <div className='marketplace_and_royality'>
+            <p>{marketplaceName()}</p>
+            <p>Royalty: {getRoyalty(data.id)}</p>
+        </div>
+
+
+        {/*<span className='separate_line'></span>*/}
+        {/*<div className='collectors'>*/}
+        {/*    <p>Collectors</p>*/}
+        {/*    <div className='percentage'>*/}
+        {/*        <div className='percentage_container'>*/}
+        {/*            <div className='percentage_bar'></div>*/}
+        {/*        </div>*/}
+        {/*        <p>34%</p>*/}
+        {/*    </div>*/}
+        {/*</div>*/}
+        {/*<div className='sale_chance'>*/}
+        {/*    <p>Sale Chance</p>*/}
+        {/*    <div className='percentage'>*/}
+        {/*        <div className='percentage_container'>*/}
+        {/*            <div className='percentage_bar'></div>*/}
+        {/*        </div>*/}
+        {/*        <p>34%</p>*/}
+        {/*    </div>*/}
+        {/*</div>*/}
+        {/*<button className='buy_button'><ShoppingBagIcon fontSize={"small"}/>{price}tz</button>*/}
+
+    </div>);
 };
 
 export default Objkt;

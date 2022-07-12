@@ -5,7 +5,6 @@ import Navbar from "./components/Navbar";
 import Live from "./pages/Live"
 import Objkt from "./components/Objkt";
 import {contractAddresses} from './components/contractAddresses'
-import {moreData} from "./components/moreData";
 
 let available = false
 
@@ -13,12 +12,9 @@ function App() {
     const [content, setContent] = useState([])
     const newContent = content.filter(x => x.metadata.name !== '[WAITING TO BE SIGNED]') || []
 
-    console.log(moreData(newContent))
-
-
     const fetchData = async () => {
         available = false
-        const response = await fetch(`https://staging.api.tzkt.io/v1/tokens?sort.desc=lastLevel&contract.ni=${contractAddresses.tezotopia},${contractAddresses.blindgallery},${contractAddresses.dogami},${contractAddresses.materia},${contractAddresses.moonCakes},${contractAddresses.gap},${contractAddresses.stayWarm},${contractAddresses.mcLaren}&transfersCount.gt=2&metadata.displayUri.ne=true&limit=3    `)
+        const response = await fetch(`https://staging.api.tzkt.io/v1/tokens?sort.desc=lastLevel&contract.ni=${contractAddresses.tezotopia},${contractAddresses.blindgallery},${contractAddresses.dogami},${contractAddresses.materia},${contractAddresses.moonCakes},${contractAddresses.gap},${contractAddresses.stayWarm},${contractAddresses.mcLaren}&transfersCount.gt=3&metadata.displayUri.ne=true&limit=3`)
         const data = await response.json()
         setContent(data)
         available = true
