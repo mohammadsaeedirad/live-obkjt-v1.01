@@ -14,7 +14,7 @@ function App() {
 
     const fetchData = async () => {
         available = false
-        const response = await fetch(`https://staging.api.tzkt.io/v1/tokens?sort.desc=lastLevel&contract.ni=${contractAddresses.tezotopia},${contractAddresses.blindgallery},${contractAddresses.dogami},${contractAddresses.materia},${contractAddresses.moonCakes},${contractAddresses.gap},${contractAddresses.stayWarm},${contractAddresses.mcLaren}&transfersCount.gt=3&metadata.displayUri.ne=true&limit=3`)
+        const response = await fetch(`https://staging.api.tzkt.io/v1/tokens?sort.desc=lastLevel&contract.ni=${contractAddresses.tezotopia},${contractAddresses.blindgallery},${contractAddresses.dogami},${contractAddresses.materia},${contractAddresses.moonCakes},${contractAddresses.gap},${contractAddresses.stayWarm},${contractAddresses.mcLaren}&transfersCount.gt=3&metadata.displayUri.ne=true&limit=24`)
         const data = await response.json()
         setContent(data)
         available = true

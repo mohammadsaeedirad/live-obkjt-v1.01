@@ -1,40 +1,50 @@
-import React,{useEffect,useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import '../styles/Objkt.css'
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 const Objkt = ({data}) => {
-    const [tid,setTid]=useState()
-    useEffect(() => {
-        setTid(data.id)
-    }, [data])
-    
+    const [info1, setInfo1] = useState()
+    useEffect( () => {
+        if(data.id){
+            getInfo(data.id)
+        }
+    }, [])
+
 
     async function royalty() {
-        let amount = await getRoyalty(data.id)
+        let amount = await getInfo(data.id)
         return amount
     }
 
-    async function getRoyalty(id) {
+    async function getInfo(id) {
         let results = await fetch('https://data.objkt.com/v2/graphql', {
             method: 'POST', body: JSON.stringify({
-                query: `query MyQuery {
-                  event_by_pk(id: "${id}") {
+            query: `query MyQuery {
+                listing_by_pk(id: "${id}") {
                     id
+                    amount
+                    amount_left
                     price
-                    token_pk
+                    marketplace {
+                    group
+                    name
+                    subgroup
+                    }
                     token {
-                      royalties {
+                    royalties {
                         amount
                         decimals
-                      }
                     }
-                  }
-                }`
+                    }
+                }
+                }
+                `
             })
         })
-        let royalty = await results.json();
-        console.log(royalty.data.event_by_pk.id)
-        return royalty.data.event_by_pk.id
+        let info = await results.json();
+        console.log(info.data.listing_by_pk.id)
+        setInfo1(info.data.listing_by_pk.id)
+        return info.data
     }
 
     function image() {
@@ -126,7 +136,9 @@ const Objkt = ({data}) => {
         </div>
         <div className='marketplace_and_royality'>
             <p>{marketplaceName()}</p>
-            <p>Royalty: {tid}</p>
+            <p>Royalty: {info1?  info1 :"-"}</p>
+
+            {/* <p>Royalty: {info.data.listing_by_pk.price? info.data.listing_by_pk.price:"-"}</p> */}
         </div>
 
 
